@@ -33,6 +33,34 @@ The SQLite file and schema are created automatically on startup
 
 `GET /health` is a liveness probe.
 
+## Fly.io deployment
+
+The server now follows the same deployment shape as Jurnee:
+
+- `Dockerfile` builds TypeScript in a Node 22 build stage, prunes dev
+  dependencies, then runs `dist/index.js` in a slim runtime image.
+- `fly.toml` deploys the API on port `4000`, keeps one machine running, mounts
+  SQLite storage at `/data`, and checks `GET /health`.
+- `.dockerignore` excludes local env files, `node_modules`, `dist`, and local
+  SQLite data from the deployment context.
+
+Typical setup:
+
+```bash
+cd server
+fly launch --copy-config
+fly volumes create calendar_data --region nrt --size 1
+fly secrets set \
+  JWT_SECRET="$(openssl rand -base64 48)" \
+  RESEND_API_KEY="re_xxxxxxxx" \
+  EMAIL_FROM="Simple Calendar <verify@your-domain.com>" \
+  SERVER_URL="https://super-simple-calendar-api.fly.dev"
+fly deploy
+```
+
+Set OAuth secrets the same way when those providers are enabled:
+`KAKAO_REST_API_KEY`, `KAKAO_CLIENT_SECRET`, and `APPLE_BUNDLE_ID`.
+
 ## Environment variables
 
 See `.env.example`. Notes:

@@ -1,0 +1,36 @@
+app = "super-simple-calendar-api"
+primary_region = "nrt"
+
+[build]
+
+[env]
+  NODE_ENV = "production"
+  PORT = "4000"
+  DB_PATH = "/data/calendar.db"
+
+[[mounts]]
+  source = "calendar_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 4000
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+[[http_service.checks]]
+  interval = "30s"
+  timeout = "5s"
+  grace_period = "10s"
+  method = "GET"
+  path = "/health"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
+
+[deploy]
+  strategy = "rolling"
