@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "super-simple-calendar",
+    "name": "Simple Calendar",
     "slug": "super-simple-calendar",
     "version": "1.0.0",
+    "scheme": "supersimplecalendar",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -13,7 +14,9 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.torinana.supersimplecalendar",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
@@ -21,10 +24,17 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.torinana.supersimplecalendar"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-sqlite",
+      "expo-secure-store",
+      "expo-web-browser",
+      "expo-apple-authentication"
+    ]
   }
 }
