@@ -1,9 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type * as ExpoSecureStore from 'expo-secure-store';
 
-// Override per environment with EXPO_PUBLIC_API_URL (e.g. your LAN IP for a
-// physical device, or the deployed URL in production).
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
+const DEFAULT_API_URL = 'https://super-simple-calendar-api.fly.dev';
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? DEFAULT_API_URL;
 const TOKEN_KEY = 'ssc_token';
 const REQUEST_TIMEOUT = 15000;
 const TOKEN_FALLBACK_KEY = `secure_fallback:${TOKEN_KEY}`;

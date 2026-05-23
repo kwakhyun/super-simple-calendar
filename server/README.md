@@ -81,12 +81,14 @@ See `.env.example`. Notes:
 
 ## Connecting the mobile app
 
-The app reads `EXPO_PUBLIC_API_URL` (defaults to `http://localhost:4000`).
-For a physical device use your machine's LAN IP, e.g. create a `.env` in the
-repo root:
+The app reads `EXPO_PUBLIC_API_URL` and defaults to the Fly.io production API:
+`https://super-simple-calendar-api.fly.dev`. The repo root `.env` and
+`eas.json` development/preview/production build profiles use that same URL.
+To point a local debug session at another server, override the value in your
+local `.env`.
 
 ```
-EXPO_PUBLIC_API_URL=http://192.168.0.10:4000
+EXPO_PUBLIC_API_URL=https://super-simple-calendar-api.fly.dev
 EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=...apps.googleusercontent.com
 EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID=...apps.googleusercontent.com
 EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=...apps.googleusercontent.com

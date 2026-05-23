@@ -7,7 +7,8 @@ import { Platform } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
 
-const API_BASE = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
+const DEFAULT_API_URL = 'https://super-simple-calendar-api.fly.dev';
+const API_BASE = process.env.EXPO_PUBLIC_API_URL ?? DEFAULT_API_URL;
 const APP_SCHEME = 'supersimplecalendar';
 const GOOGLE_IOS_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID;
 const GOOGLE_ANDROID_CLIENT_ID =
