@@ -35,5 +35,5 @@ COPY --from=build --chown=node:node /app/package.json ./package.json
 USER node
 EXPOSE 4000
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
+ENTRYPOINT ["/usr/bin/tini", "-s", "--"]
 CMD ["node", "dist/index.js"]
