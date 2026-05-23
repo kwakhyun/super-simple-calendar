@@ -31,6 +31,11 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     signIn: 'Sign in',
     signUp: 'Sign up',
     signOut: 'Sign out',
+    deleteAccount: 'Delete account',
+    deleteAccountHelp: 'Permanently delete your account and sign out of this device.',
+    deleteAccountConfirmTitle: 'Delete account?',
+    deleteAccountConfirmMessage:
+      'Your account will be permanently deleted. Memos saved only on this device will stay here.',
     email: 'Email',
     password: 'Password',
     emailPlaceholder: 'you@example.com',
@@ -85,6 +90,11 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     signIn: '로그인',
     signUp: '가입',
     signOut: '로그아웃',
+    deleteAccount: '계정 삭제',
+    deleteAccountHelp: '계정을 영구 삭제하고 이 기기에서 로그아웃합니다.',
+    deleteAccountConfirmTitle: '계정을 삭제할까요?',
+    deleteAccountConfirmMessage:
+      '계정은 영구 삭제됩니다. 이 기기에만 저장된 메모는 그대로 유지됩니다.',
     email: '이메일',
     password: '비밀번호',
     emailPlaceholder: 'you@example.com',

@@ -369,6 +369,29 @@ router.get("/me", authMiddleware, (req: Request, res: Response) => {
   res.json({ user: publicUser(user) });
 });
 
+// DELETE /auth/account -------------------------------------------------------
+router.delete("/account", authMiddleware, (req: Request, res: Response) => {
+  const userId = req.user!.userId;
+  const user = db
+    .prepare("SELECT id FROM users WHERE id = ?")
+    .get(userId) as Pick<UserRow, "id"> | undefined;
+
+  if (!user) {
+    sendError(res, 404, ERROR_CODES.NOT_FOUND, "사용자를 찾을 수 없습니다.");
+    return;
+  }
+
+  const deleteAccount = db.transaction(() => {
+    db.prepare("DELETE FROM revoked_tokens WHERE user_id = ?").run(userId);
+    db.prepare("DELETE FROM email_verifications WHERE user_id = ?").run(userId);
+    db.prepare("DELETE FROM user_oauth WHERE user_id = ?").run(userId);
+    db.prepare("DELETE FROM users WHERE id = ?").run(userId);
+  });
+
+  deleteAccount();
+  res.json({ success: true });
+});
+
 // POST /auth/logout ----------------------------------------------------------
 router.post("/logout", authMiddleware, (req: Request, res: Response) => {
   const claims = req.tokenClaims;

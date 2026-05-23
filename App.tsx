@@ -276,6 +276,18 @@ export default function App() {
     }
   };
 
+  const deleteAccount = async () => {
+    try {
+      await authApi.deleteAccount();
+      setAuthUser(null);
+      setNeedsVerification(false);
+      setIsSettingsOpen(false);
+      setErrorMessage(null);
+    } catch (error) {
+      setErrorMessage(toErrorMessage(error));
+    }
+  };
+
   const openMemo = (dateKey: string) => {
     const existingMemos = memos[dateKey] ?? [];
 
@@ -407,6 +419,7 @@ export default function App() {
         iconColor={colors.text}
         needsVerification={needsVerification}
         onClose={() => setIsSettingsOpen(false)}
+        onDeleteAccount={() => void deleteAccount()}
         onOpenAuth={() => setIsAuthOpen(true)}
         onSignOut={() => void signOut()}
         onUpdateSettings={(nextSettings) => void updateSettings(nextSettings)}

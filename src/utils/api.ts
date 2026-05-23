@@ -227,6 +227,15 @@ export const authApi = {
     await clearToken();
   },
 
+  async deleteAccount(): Promise<void> {
+    await request<{ success: boolean }>(
+      '/auth/account',
+      { method: 'DELETE' },
+      { auth: true },
+    );
+    await clearToken();
+  },
+
   async restoreSession(): Promise<AuthUser | null> {
     const token = await getToken();
     if (!token) return null;

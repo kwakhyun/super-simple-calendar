@@ -1,5 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {
+  Alert,
   Modal,
   Pressable,
   SafeAreaView,
@@ -17,6 +18,7 @@ type SettingsModalProps = {
   iconColor: string;
   needsVerification: boolean;
   onClose: () => void;
+  onDeleteAccount: () => void;
   onOpenAuth: () => void;
   onSignOut: () => void;
   onUpdateSettings: (settings: AppSettings) => void;
@@ -31,6 +33,7 @@ export function SettingsModal({
   iconColor,
   needsVerification,
   onClose,
+  onDeleteAccount,
   onOpenAuth,
   onSignOut,
   onUpdateSettings,
@@ -50,6 +53,21 @@ export function SettingsModal({
   const openAuth = () => {
     onClose();
     onOpenAuth();
+  };
+
+  const confirmDeleteAccount = () => {
+    Alert.alert(
+      text.deleteAccountConfirmTitle,
+      text.deleteAccountConfirmMessage,
+      [
+        { text: text.cancel, style: 'cancel' },
+        {
+          text: text.deleteAccount,
+          onPress: onDeleteAccount,
+          style: 'destructive',
+        },
+      ],
+    );
   };
 
   const renderAccount = () => {
@@ -94,6 +112,21 @@ export function SettingsModal({
                 }
               >
                 {text.signOut}
+              </Text>
+            </Pressable>
+          </View>
+          <View style={styles.dangerZone}>
+            <Text style={styles.accountHelpText}>{text.deleteAccountHelp}</Text>
+            <Pressable
+              accessibilityRole="button"
+              onPress={confirmDeleteAccount}
+              style={({ pressed }) => [
+                styles.settingDangerAction,
+                pressed && styles.pressed,
+              ]}
+            >
+              <Text style={styles.settingDangerActionText}>
+                {text.deleteAccount}
               </Text>
             </Pressable>
           </View>

@@ -2,7 +2,9 @@
   "expo": {
     "name": "Simple Calendar",
     "slug": "super-simple-calendar",
+    "description": "A simple calendar for quick daily memos.",
     "version": "1.0.0",
+    "githubUrl": "https://github.com/kwakhyun/super-simple-calendar",
     "scheme": "supersimplecalendar",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,16 +18,21 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.torinana.supersimplecalendar",
+      "buildNumber": "1",
       "usesAppleSignIn": true
     },
     "android": {
+      "permissions": [
+        "INTERNET"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.torinana.supersimplecalendar"
+      "package": "com.torinana.supersimplecalendar",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -56,6 +56,10 @@ export type Translation = {
   signIn: string;
   signUp: string;
   signOut: string;
+  deleteAccount: string;
+  deleteAccountHelp: string;
+  deleteAccountConfirmTitle: string;
+  deleteAccountConfirmMessage: string;
   email: string;
   password: string;
   emailPlaceholder: string;
