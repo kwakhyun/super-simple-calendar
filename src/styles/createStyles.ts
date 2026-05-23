@@ -523,69 +523,70 @@ export const createStyles = (colors: ThemeColors) =>
       fontWeight: '800',
       textAlign: 'center',
     },
-    socialButtonStack: {
-      gap: 10,
-    },
-    socialButton: {
-      alignItems: 'center',
-      borderRadius: 14,
-      flexDirection: 'row',
-      gap: 12,
-      minHeight: 52,
-      paddingHorizontal: 14,
-      paddingVertical: 12,
-      width: '100%',
-    },
-    socialButtonText: {
-      flex: 1,
-      fontSize: 15,
-      fontWeight: '900',
-      textAlign: 'center',
-    },
-    socialIconPill: {
-      alignItems: 'center',
-      backgroundColor: 'rgba(15, 23, 42, 0.06)',
-      borderRadius: 999,
-      height: 30,
-      justifyContent: 'center',
-      width: 30,
-    },
-    socialIconPillDark: {
-      alignItems: 'center',
-      backgroundColor: 'rgba(255, 255, 255, 0.16)',
-      borderRadius: 999,
-      height: 30,
-      justifyContent: 'center',
-      width: 30,
-    },
-    socialIconPillKakao: {
-      alignItems: 'center',
-      backgroundColor: 'rgba(25, 22, 0, 0.1)',
-      borderRadius: 999,
-      height: 30,
-      justifyContent: 'center',
-      width: 30,
-    },
-    socialGoogle: {
-      backgroundColor: '#ffffff',
-      borderColor: '#dadce0',
-      borderWidth: 1,
-    },
-    socialGoogleText: {
-      color: '#1f1f1f',
-    },
-    socialApple: {
-      backgroundColor: '#000000',
-    },
-    socialAppleText: {
-      color: '#ffffff',
-    },
-    socialKakao: {
-      backgroundColor: '#FEE500',
-    },
-    socialKakaoText: {
-      color: '#191600',
-    },
+    // Social login is intentionally disabled for the initial release.
+    // socialButtonStack: {
+    //   gap: 10,
+    // },
+    // socialButton: {
+    //   alignItems: 'center',
+    //   borderRadius: 14,
+    //   flexDirection: 'row',
+    //   gap: 12,
+    //   minHeight: 52,
+    //   paddingHorizontal: 14,
+    //   paddingVertical: 12,
+    //   width: '100%',
+    // },
+    // socialButtonText: {
+    //   flex: 1,
+    //   fontSize: 15,
+    //   fontWeight: '900',
+    //   textAlign: 'center',
+    // },
+    // socialIconPill: {
+    //   alignItems: 'center',
+    //   backgroundColor: 'rgba(15, 23, 42, 0.06)',
+    //   borderRadius: 999,
+    //   height: 30,
+    //   justifyContent: 'center',
+    //   width: 30,
+    // },
+    // socialIconPillDark: {
+    //   alignItems: 'center',
+    //   backgroundColor: 'rgba(255, 255, 255, 0.16)',
+    //   borderRadius: 999,
+    //   height: 30,
+    //   justifyContent: 'center',
+    //   width: 30,
+    // },
+    // socialIconPillKakao: {
+    //   alignItems: 'center',
+    //   backgroundColor: 'rgba(25, 22, 0, 0.1)',
+    //   borderRadius: 999,
+    //   height: 30,
+    //   justifyContent: 'center',
+    //   width: 30,
+    // },
+    // socialGoogle: {
+    //   backgroundColor: '#ffffff',
+    //   borderColor: '#dadce0',
+    //   borderWidth: 1,
+    // },
+    // socialGoogleText: {
+    //   color: '#1f1f1f',
+    // },
+    // socialApple: {
+    //   backgroundColor: '#000000',
+    // },
+    // socialAppleText: {
+    //   color: '#ffffff',
+    // },
+    // socialKakao: {
+    //   backgroundColor: '#FEE500',
+    // },
+    // socialKakaoText: {
+    //   color: '#191600',
+    // },
   });
 
 export type AppStyles = ReturnType<typeof createStyles>;

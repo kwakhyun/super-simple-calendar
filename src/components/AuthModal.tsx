@@ -18,9 +18,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 6;
 
 type AuthModalProps = {
-  appleReady: boolean;
   authUser: AuthUser | null;
-  googleReady: boolean;
   iconColor: string;
   needsVerification: boolean;
   placeholderColor: string;
@@ -29,9 +27,10 @@ type AuthModalProps = {
   onSignIn: (email: string, password: string) => Promise<string | null>;
   onSignOut: () => void;
   onSignUp: (email: string, password: string) => Promise<string | null>;
-  onSocialLogin: (
-    provider: 'google' | 'apple' | 'kakao',
-  ) => Promise<string | null>;
+  // Social login is intentionally disabled for the initial release.
+  // onSocialLogin: (
+  //   provider: 'google' | 'apple' | 'kakao',
+  // ) => Promise<string | null>;
   onVerifyEmail: (code: string) => Promise<string | null>;
   styles: AppStyles;
   text: Translation;
@@ -39,9 +38,7 @@ type AuthModalProps = {
 };
 
 export function AuthModal({
-  appleReady,
   authUser,
-  googleReady,
   iconColor,
   needsVerification,
   placeholderColor,
@@ -50,7 +47,7 @@ export function AuthModal({
   onSignIn,
   onSignOut,
   onSignUp,
-  onSocialLogin,
+  // onSocialLogin,
   onVerifyEmail,
   styles,
   text,
@@ -153,18 +150,19 @@ export function AuthModal({
     }
   };
 
-  const handleSocial = async (provider: 'google' | 'apple' | 'kakao') => {
-    if (submitting) return;
-    setSubmitting(true);
-    setAuthError(null);
-    const result = await onSocialLogin(provider);
-    setSubmitting(false);
-    if (result) {
-      setAuthError(result);
-      return;
-    }
-    onClose();
-  };
+  // Social login is intentionally disabled for the initial release.
+  // const handleSocial = async (provider: 'google' | 'apple' | 'kakao') => {
+  //   if (submitting) return;
+  //   setSubmitting(true);
+  //   setAuthError(null);
+  //   const result = await onSocialLogin(provider);
+  //   setSubmitting(false);
+  //   if (result) {
+  //     setAuthError(result);
+  //     return;
+  //   }
+  //   onClose();
+  // };
 
   const handleSignOut = () => {
     onSignOut();
@@ -327,71 +325,17 @@ export function AuthModal({
           </Pressable>
         </View>
 
+        {/*
+        Social login is intentionally disabled for the initial release.
+
         <View style={styles.accountDivider}>
           <View style={styles.accountDividerLine} />
           <Text style={styles.accountDividerText}>{text.continueWith}</Text>
           <View style={styles.accountDividerLine} />
         </View>
 
-        <View style={styles.socialButtonStack}>
-          {googleReady ? (
-            <Pressable
-              accessibilityRole="button"
-              disabled={submitting}
-              onPress={() => void handleSocial('google')}
-              style={({ pressed }) => [
-                styles.socialButton,
-                styles.socialGoogle,
-                (pressed || submitting) && styles.pressed,
-              ]}
-            >
-              <View style={styles.socialIconPill}>
-                <Ionicons name="logo-google" size={18} color="#1f1f1f" />
-              </View>
-              <Text style={[styles.socialButtonText, styles.socialGoogleText]}>
-                {text.googleLogin}
-              </Text>
-            </Pressable>
-          ) : null}
-
-          {appleReady ? (
-            <Pressable
-              accessibilityRole="button"
-              disabled={submitting}
-              onPress={() => void handleSocial('apple')}
-              style={({ pressed }) => [
-                styles.socialButton,
-                styles.socialApple,
-                (pressed || submitting) && styles.pressed,
-              ]}
-            >
-              <View style={styles.socialIconPillDark}>
-                <Ionicons name="logo-apple" size={18} color="#ffffff" />
-              </View>
-              <Text style={[styles.socialButtonText, styles.socialAppleText]}>
-                {text.appleLogin}
-              </Text>
-            </Pressable>
-          ) : null}
-
-          <Pressable
-            accessibilityRole="button"
-            disabled={submitting}
-            onPress={() => void handleSocial('kakao')}
-            style={({ pressed }) => [
-              styles.socialButton,
-              styles.socialKakao,
-              (pressed || submitting) && styles.pressed,
-            ]}
-          >
-            <View style={styles.socialIconPillKakao}>
-              <Ionicons name="chatbubble-sharp" size={17} color="#191600" />
-            </View>
-            <Text style={[styles.socialButtonText, styles.socialKakaoText]}>
-              {text.kakaoLogin}
-            </Text>
-          </Pressable>
-        </View>
+        <View style={styles.socialButtonStack}>...</View>
+        */}
       </View>
     );
   };

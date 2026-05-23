@@ -14,16 +14,17 @@ export const verifyEmailSchema = z.object({
   code: z.string().trim().regex(/^\d{6}$/, "6자리 인증 코드를 입력하세요."),
 });
 
-export const socialAuthSchema = z.object({
-  provider: z.enum(["google", "kakao", "apple"]),
-  // Google: access token. Apple: identity token. Kakao: authorization code.
-  token: z.string().min(1, "토큰이 필요합니다."),
-  // Kakao authorization-code flow requires the redirect URI used by the client.
-  redirectUri: z.string().url().optional(),
-  email: z.string().trim().toLowerCase().email().optional(),
-});
+// Social login is intentionally disabled for the initial release.
+// export const socialAuthSchema = z.object({
+//   provider: z.enum(["google", "kakao", "apple"]),
+//   // Google: access token. Apple: identity token. Kakao: authorization code.
+//   token: z.string().min(1, "토큰이 필요합니다."),
+//   // Kakao authorization-code flow requires the redirect URI used by the client.
+//   redirectUri: z.string().url().optional(),
+//   email: z.string().trim().toLowerCase().email().optional(),
+// });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type VerifyEmailInput = z.infer<typeof verifyEmailSchema>;
-export type SocialAuthInput = z.infer<typeof socialAuthSchema>;
+// export type SocialAuthInput = z.infer<typeof socialAuthSchema>;

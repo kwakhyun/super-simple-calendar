@@ -36,6 +36,12 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     deleteAccountConfirmTitle: 'Delete account?',
     deleteAccountConfirmMessage:
       'Your account will be permanently deleted. Memos saved only on this device will stay here.',
+    deleteAllData: 'Delete all data',
+    deleteAllDataHelp:
+      'Permanently delete local memos, settings, and your account if signed in.',
+    deleteAllDataConfirmTitle: 'Delete all data?',
+    deleteAllDataConfirmMessage:
+      'This permanently deletes local memos and settings. If you are signed in, your account will also be deleted.',
     email: 'Email',
     password: 'Password',
     emailPlaceholder: 'you@example.com',
@@ -55,10 +61,11 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     resendCode: 'Resend code',
     codeResent: 'A new code has been sent.',
     continueWith: 'or continue with',
-    googleLogin: 'Continue with Google',
-    appleLogin: 'Continue with Apple',
-    kakaoLogin: 'Continue with Kakao',
-    socialUnavailable: 'This login is not available on this device.',
+    // Social login is intentionally disabled for the initial release.
+    // googleLogin: 'Continue with Google',
+    // appleLogin: 'Continue with Apple',
+    // kakaoLogin: 'Continue with Kakao',
+    // socialUnavailable: 'This login is not available on this device.',
   },
   ko: {
     settings: '설정',
@@ -95,6 +102,12 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     deleteAccountConfirmTitle: '계정을 삭제할까요?',
     deleteAccountConfirmMessage:
       '계정은 영구 삭제됩니다. 이 기기에만 저장된 메모는 그대로 유지됩니다.',
+    deleteAllData: '모든 데이터 삭제',
+    deleteAllDataHelp:
+      '로컬 메모와 설정을 영구 삭제하고, 로그인 중이면 계정도 함께 삭제합니다.',
+    deleteAllDataConfirmTitle: '모든 데이터를 삭제할까요?',
+    deleteAllDataConfirmMessage:
+      '로컬 메모와 설정이 영구 삭제됩니다. 로그인 중이면 계정도 함께 삭제됩니다.',
     email: '이메일',
     password: '비밀번호',
     emailPlaceholder: 'you@example.com',
@@ -113,10 +126,11 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     resendCode: '코드 재발송',
     codeResent: '새 인증 코드를 발송했습니다.',
     continueWith: '또는 간편 로그인',
-    googleLogin: 'Google로 계속하기',
-    appleLogin: 'Apple로 계속하기',
-    kakaoLogin: '카카오로 계속하기',
-    socialUnavailable: '이 기기에서는 사용할 수 없는 로그인입니다.',
+    // Social login is intentionally disabled for the initial release.
+    // googleLogin: 'Google로 계속하기',
+    // appleLogin: 'Apple로 계속하기',
+    // kakaoLogin: '카카오로 계속하기',
+    // socialUnavailable: '이 기기에서는 사용할 수 없는 로그인입니다.',
   },
 };
 

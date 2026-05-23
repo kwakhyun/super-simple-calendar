@@ -1,3 +1,6 @@
+/*
+ * Social login is intentionally disabled for the initial release.
+ *
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Google from 'expo-auth-session/providers/google';
 import * as Linking from 'expo-linking';
@@ -123,3 +126,4 @@ export function useSocialAuth() {
     signInWithKakao,
   };
 }
+*/

@@ -224,3 +224,22 @@ export const saveStoredSettings = async (settings: AppSettings) => {
   const database = await getDatabase();
   await saveSettingsToDatabase(database, settings);
 };
+
+export const clearStoredData = async () => {
+  const database = await getDatabase();
+
+  await database.withTransactionAsync(async () => {
+    await database.runAsync('DELETE FROM memos;');
+    await database.runAsync('DELETE FROM settings;');
+    await database.runAsync('DELETE FROM widget_summary;');
+  });
+
+  await AsyncStorage.multiRemove([
+    MEMO_STORAGE_KEY,
+    SETTINGS_STORAGE_KEY,
+    MIGRATION_STORAGE_KEY,
+  ]);
+
+  const bridge = NativeModules.CalendarWidgetBridge as CalendarWidgetBridge | undefined;
+  bridge?.saveSummary?.('', toDateKey(new Date()), 0);
+};

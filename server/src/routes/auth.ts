@@ -10,16 +10,17 @@ import {
 } from "../middleware/auth";
 import { createVerificationCode, sendVerificationEmail, verifyCode } from "../utils/email";
 import { ERROR_CODES, sendError } from "../utils/http";
-import {
-  verifyAppleToken,
-  verifyGoogleToken,
-  verifyKakaoCode,
-  type OAuthProfile,
-} from "../utils/oauth";
+// Social login is intentionally disabled for the initial release.
+// import {
+//   verifyAppleToken,
+//   verifyGoogleToken,
+//   verifyKakaoCode,
+//   type OAuthProfile,
+// } from "../utils/oauth";
 import {
   loginSchema,
   registerSchema,
-  socialAuthSchema,
+  // socialAuthSchema,
   verifyEmailSchema,
 } from "../validation/schemas";
 
@@ -197,162 +198,163 @@ router.post(
   },
 );
 
+// Social login is intentionally disabled for the initial release.
 // POST /auth/social ----------------------------------------------------------
-router.post("/social", async (req: Request, res: Response) => {
-  const parsed = socialAuthSchema.safeParse(req.body);
-  if (!parsed.success) {
-    sendError(res, 400, ERROR_CODES.VALIDATION, parsed.error.issues[0].message);
-    return;
-  }
-  const { provider, token, redirectUri, email: bodyEmail } = parsed.data;
-
-  let profile: OAuthProfile;
-  try {
-    if (provider === "google") {
-      profile = await verifyGoogleToken(token);
-    } else if (provider === "apple") {
-      profile = await verifyAppleToken(token);
-    } else {
-      if (!redirectUri) {
-        sendError(
-          res,
-          400,
-          ERROR_CODES.VALIDATION,
-          "카카오 로그인에는 redirectUri가 필요합니다.",
-        );
-        return;
-      }
-      profile = await verifyKakaoCode(token, redirectUri);
-    }
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "소셜 로그인 인증에 실패했습니다.";
-    sendError(res, 401, ERROR_CODES.UNAUTHORIZED, message);
-    return;
-  }
-
-  const result = upsertOAuthUser(provider, profile, bodyEmail);
-  res.status(result.created ? 201 : 200).json({
-    token: result.token,
-    user: result.user,
-  });
-});
-
-function upsertOAuthUser(
-  provider: "google" | "kakao" | "apple",
-  profile: OAuthProfile,
-  bodyEmail?: string,
-) {
-  const email = bodyEmail || profile.email;
-
-  // 1. OAuth identity already linked → log that user in.
-  const link = db
-    .prepare(
-      "SELECT user_id FROM user_oauth WHERE provider = ? AND provider_id = ?",
-    )
-    .get(provider, profile.id) as { user_id: string } | undefined;
-
-  if (link) {
-    const user = db
-      .prepare(
-        "SELECT id, email, auth_provider, email_verified FROM users WHERE id = ?",
-      )
-      .get(link.user_id) as UserRow;
-    db.prepare(
-      "UPDATE users SET email_verified = 1, updated_at = datetime('now') WHERE id = ?",
-    ).run(user.id);
-    return {
-      created: false,
-      token: generateToken({ userId: user.id, email: user.email }),
-      user: { ...publicUser(user), emailVerified: true },
-    };
-  }
-
-  // 2. Same email exists → link the OAuth identity to it.
-  if (email) {
-    const existing = db
-      .prepare(
-        "SELECT id, email, auth_provider, email_verified FROM users WHERE email = ?",
-      )
-      .get(email) as UserRow | undefined;
-    if (existing) {
-      db.prepare(
-        "INSERT INTO user_oauth (user_id, provider, provider_id) VALUES (?, ?, ?)",
-      ).run(existing.id, provider, profile.id);
-      db.prepare(
-        "UPDATE users SET email_verified = 1, updated_at = datetime('now') WHERE id = ?",
-      ).run(existing.id);
-      return {
-        created: false,
-        token: generateToken({ userId: existing.id, email: existing.email }),
-        user: { ...publicUser(existing), emailVerified: true },
-      };
-    }
-  }
-
-  // 3. New user (OAuth accounts are considered email-verified).
-  const id = uuidv4();
-  const finalEmail = email || `${provider}_${profile.id}@calendar.local`;
-  const placeholderHash = bcrypt.hashSync(uuidv4(), 4);
-  db.prepare(
-    `INSERT INTO users (id, email, password_hash, auth_provider, email_verified)
-     VALUES (?, ?, ?, ?, 1)`,
-  ).run(id, finalEmail, placeholderHash, provider);
-  db.prepare(
-    "INSERT INTO user_oauth (user_id, provider, provider_id) VALUES (?, ?, ?)",
-  ).run(id, provider, profile.id);
-
-  return {
-    created: true,
-    token: generateToken({ userId: id, email: finalEmail }),
-    user: publicUser({
-      id,
-      email: finalEmail,
-      auth_provider: provider,
-      email_verified: 1,
-    }),
-  };
-}
-
+// router.post("/social", async (req: Request, res: Response) => {
+//   const parsed = socialAuthSchema.safeParse(req.body);
+//   if (!parsed.success) {
+//     sendError(res, 400, ERROR_CODES.VALIDATION, parsed.error.issues[0].message);
+//     return;
+//   }
+//   const { provider, token, redirectUri, email: bodyEmail } = parsed.data;
+//
+//   let profile: OAuthProfile;
+//   try {
+//     if (provider === "google") {
+//       profile = await verifyGoogleToken(token);
+//     } else if (provider === "apple") {
+//       profile = await verifyAppleToken(token);
+//     } else {
+//       if (!redirectUri) {
+//         sendError(
+//           res,
+//           400,
+//           ERROR_CODES.VALIDATION,
+//           "카카오 로그인에는 redirectUri가 필요합니다.",
+//         );
+//         return;
+//       }
+//       profile = await verifyKakaoCode(token, redirectUri);
+//     }
+//   } catch (e) {
+//     const message = e instanceof Error ? e.message : "소셜 로그인 인증에 실패했습니다.";
+//     sendError(res, 401, ERROR_CODES.UNAUTHORIZED, message);
+//     return;
+//   }
+//
+//   const result = upsertOAuthUser(provider, profile, bodyEmail);
+//   res.status(result.created ? 201 : 200).json({
+//     token: result.token,
+//     user: result.user,
+//   });
+// });
+//
+// function upsertOAuthUser(
+//   provider: "google" | "kakao" | "apple",
+//   profile: OAuthProfile,
+//   bodyEmail?: string,
+// ) {
+//   const email = bodyEmail || profile.email;
+//
+//   // 1. OAuth identity already linked -> log that user in.
+//   const link = db
+//     .prepare(
+//       "SELECT user_id FROM user_oauth WHERE provider = ? AND provider_id = ?",
+//     )
+//     .get(provider, profile.id) as { user_id: string } | undefined;
+//
+//   if (link) {
+//     const user = db
+//       .prepare(
+//         "SELECT id, email, auth_provider, email_verified FROM users WHERE id = ?",
+//       )
+//       .get(link.user_id) as UserRow;
+//     db.prepare(
+//       "UPDATE users SET email_verified = 1, updated_at = datetime('now') WHERE id = ?",
+//     ).run(user.id);
+//     return {
+//       created: false,
+//       token: generateToken({ userId: user.id, email: user.email }),
+//       user: { ...publicUser(user), emailVerified: true },
+//     };
+//   }
+//
+//   // 2. Same email exists -> link the OAuth identity to it.
+//   if (email) {
+//     const existing = db
+//       .prepare(
+//         "SELECT id, email, auth_provider, email_verified FROM users WHERE email = ?",
+//       )
+//       .get(email) as UserRow | undefined;
+//     if (existing) {
+//       db.prepare(
+//         "INSERT INTO user_oauth (user_id, provider, provider_id) VALUES (?, ?, ?)",
+//       ).run(existing.id, provider, profile.id);
+//       db.prepare(
+//         "UPDATE users SET email_verified = 1, updated_at = datetime('now') WHERE id = ?",
+//       ).run(existing.id);
+//       return {
+//         created: false,
+//         token: generateToken({ userId: existing.id, email: existing.email }),
+//         user: { ...publicUser(existing), emailVerified: true },
+//       };
+//     }
+//   }
+//
+//   // 3. New user (OAuth accounts are considered email-verified).
+//   const id = uuidv4();
+//   const finalEmail = email || `${provider}_${profile.id}@calendar.local`;
+//   const placeholderHash = bcrypt.hashSync(uuidv4(), 4);
+//   db.prepare(
+//     `INSERT INTO users (id, email, password_hash, auth_provider, email_verified)
+//      VALUES (?, ?, ?, ?, 1)`,
+//   ).run(id, finalEmail, placeholderHash, provider);
+//   db.prepare(
+//     "INSERT INTO user_oauth (user_id, provider, provider_id) VALUES (?, ?, ?)",
+//   ).run(id, provider, profile.id);
+//
+//   return {
+//     created: true,
+//     token: generateToken({ userId: id, email: finalEmail }),
+//     user: publicUser({
+//       id,
+//       email: finalEmail,
+//       auth_provider: provider,
+//       email_verified: 1,
+//     }),
+//   };
+// }
+//
 // Kakao server-side flow: app opens /auth/kakao/start in a web browser, we
 // redirect to Kakao, Kakao redirects back to /auth/kakao/callback, and we
 // deep-link the JWT back into the app via the configured app scheme.
-router.get("/kakao/start", (_req: Request, res: Response) => {
-  const kakaoKey = process.env.KAKAO_REST_API_KEY;
-  if (!kakaoKey) {
-    res.status(500).send("KAKAO_REST_API_KEY is not configured.");
-    return;
-  }
-  const serverUrl = process.env.SERVER_URL || "http://localhost:4000";
-  const redirectUri = `${serverUrl}/auth/kakao/callback`;
-  const authUrl =
-    "https://kauth.kakao.com/oauth/authorize?" +
-    new URLSearchParams({
-      client_id: kakaoKey,
-      redirect_uri: redirectUri,
-      response_type: "code",
-    }).toString();
-  res.redirect(authUrl);
-});
-
-router.get("/kakao/callback", async (req: Request, res: Response) => {
-  const code = typeof req.query.code === "string" ? req.query.code : "";
-  const scheme = process.env.APP_SCHEME || "supersimplecalendar";
-  const serverUrl = process.env.SERVER_URL || "http://localhost:4000";
-  const redirectUri = `${serverUrl}/auth/kakao/callback`;
-
-  try {
-    if (!code) {
-      throw new Error("카카오 인증 코드가 없습니다.");
-    }
-    const profile = await verifyKakaoCode(code, redirectUri);
-    const result = upsertOAuthUser("kakao", profile);
-    res.redirect(`${scheme}://auth?token=${encodeURIComponent(result.token)}`);
-  } catch (e) {
-    const message =
-      e instanceof Error ? e.message : "카카오 로그인에 실패했습니다.";
-    res.redirect(`${scheme}://auth?error=${encodeURIComponent(message)}`);
-  }
-});
+// router.get("/kakao/start", (_req: Request, res: Response) => {
+//   const kakaoKey = process.env.KAKAO_REST_API_KEY;
+//   if (!kakaoKey) {
+//     res.status(500).send("KAKAO_REST_API_KEY is not configured.");
+//     return;
+//   }
+//   const serverUrl = process.env.SERVER_URL || "http://localhost:4000";
+//   const redirectUri = `${serverUrl}/auth/kakao/callback`;
+//   const authUrl =
+//     "https://kauth.kakao.com/oauth/authorize?" +
+//     new URLSearchParams({
+//       client_id: kakaoKey,
+//       redirect_uri: redirectUri,
+//       response_type: "code",
+//     }).toString();
+//   res.redirect(authUrl);
+// });
+//
+// router.get("/kakao/callback", async (req: Request, res: Response) => {
+//   const code = typeof req.query.code === "string" ? req.query.code : "";
+//   const scheme = process.env.APP_SCHEME || "supersimplecalendar";
+//   const serverUrl = process.env.SERVER_URL || "http://localhost:4000";
+//   const redirectUri = `${serverUrl}/auth/kakao/callback`;
+//
+//   try {
+//     if (!code) {
+//       throw new Error("카카오 인증 코드가 없습니다.");
+//     }
+//     const profile = await verifyKakaoCode(code, redirectUri);
+//     const result = upsertOAuthUser("kakao", profile);
+//     res.redirect(`${scheme}://auth?token=${encodeURIComponent(result.token)}`);
+//   } catch (e) {
+//     const message =
+//       e instanceof Error ? e.message : "카카오 로그인에 실패했습니다.";
+//     res.redirect(`${scheme}://auth?error=${encodeURIComponent(message)}`);
+//   }
+// });
 
 // GET /auth/me ---------------------------------------------------------------
 router.get("/me", authMiddleware, (req: Request, res: Response) => {

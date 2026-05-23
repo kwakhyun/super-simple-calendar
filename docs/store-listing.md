@@ -18,7 +18,7 @@ Features:
 - Simple memo editing per day
 - Light and dark themes
 - English and Korean language support
-- Optional account sign-in and email verification
+- Optional email account sign-in and email verification
 
 ## Keywords
 
@@ -30,7 +30,7 @@ Productivity
 
 ## Privacy Summary
 
-The app collects an email address and authentication identifiers only when users create an account or sign in. Calendar memos are stored locally on the device in the current version. The app does not include ads or tracking SDKs.
+The app collects an email address only when users create an account or sign in. Calendar memos are stored locally on the device in the current version. The app does not include ads, tracking SDKs, or social login in the initial release.
 
 ## Required Store URLs
 

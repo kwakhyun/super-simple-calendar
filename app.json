@@ -18,8 +18,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.torinana.supersimplecalendar",
-      "buildNumber": "1",
-      "usesAppleSignIn": true
+      "buildNumber": "1"
     },
     "android": {
       "permissions": [
@@ -39,9 +38,7 @@
     },
     "plugins": [
       "expo-sqlite",
-      "expo-secure-store",
-      "expo-web-browser",
-      "expo-apple-authentication"
+      "expo-secure-store"
     ]
   }
 }

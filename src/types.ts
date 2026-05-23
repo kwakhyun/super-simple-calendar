@@ -60,6 +60,10 @@ export type Translation = {
   deleteAccountHelp: string;
   deleteAccountConfirmTitle: string;
   deleteAccountConfirmMessage: string;
+  deleteAllData: string;
+  deleteAllDataHelp: string;
+  deleteAllDataConfirmTitle: string;
+  deleteAllDataConfirmMessage: string;
   email: string;
   password: string;
   emailPlaceholder: string;
@@ -78,8 +82,9 @@ export type Translation = {
   resendCode: string;
   codeResent: string;
   continueWith: string;
-  googleLogin: string;
-  appleLogin: string;
-  kakaoLogin: string;
-  socialUnavailable: string;
+  // Social login is intentionally disabled for the initial release.
+  // googleLogin: string;
+  // appleLogin: string;
+  // kakaoLogin: string;
+  // socialUnavailable: string;
 };

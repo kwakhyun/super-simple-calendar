@@ -18,6 +18,7 @@ type SettingsModalProps = {
   iconColor: string;
   needsVerification: boolean;
   onClose: () => void;
+  onDeleteAllData: () => void;
   onDeleteAccount: () => void;
   onOpenAuth: () => void;
   onSignOut: () => void;
@@ -33,6 +34,7 @@ export function SettingsModal({
   iconColor,
   needsVerification,
   onClose,
+  onDeleteAllData,
   onDeleteAccount,
   onOpenAuth,
   onSignOut,
@@ -64,6 +66,21 @@ export function SettingsModal({
         {
           text: text.deleteAccount,
           onPress: onDeleteAccount,
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
+  const confirmDeleteAllData = () => {
+    Alert.alert(
+      text.deleteAllDataConfirmTitle,
+      text.deleteAllDataConfirmMessage,
+      [
+        { text: text.cancel, style: 'cancel' },
+        {
+          text: text.deleteAllData,
+          onPress: onDeleteAllData,
           style: 'destructive',
         },
       ],
@@ -235,6 +252,23 @@ export function SettingsModal({
                 </Pressable>
               ))}
             </View>
+          </View>
+
+          <View style={styles.settingGroup}>
+            <Text style={styles.settingLabel}>{text.deleteAllData}</Text>
+            <Text style={styles.accountHelpText}>{text.deleteAllDataHelp}</Text>
+            <Pressable
+              accessibilityRole="button"
+              onPress={confirmDeleteAllData}
+              style={({ pressed }) => [
+                styles.settingDangerAction,
+                pressed && styles.pressed,
+              ]}
+            >
+              <Text style={styles.settingDangerActionText}>
+                {text.deleteAllData}
+              </Text>
+            </Pressable>
           </View>
         </ScrollView>
       </SafeAreaView>

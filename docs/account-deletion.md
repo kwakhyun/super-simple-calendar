@@ -9,7 +9,9 @@ Simple Calendar lets users delete their account in the app.
 3. In Account, choose Delete account.
 4. Confirm deletion.
 
-This permanently deletes the server account, linked social login records, verification codes, and account token records. Memos stored only on the device remain on that device.
+This permanently deletes the server account, verification codes, and account token records. Memos stored only on the device remain on that device.
+
+To delete local memos and settings as well, open Settings and choose Delete all data. If you are signed in, this also deletes your server account.
 
 ## Deletion Request Without the App
 

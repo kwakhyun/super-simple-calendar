@@ -16,6 +16,7 @@ import { MemoModal } from './src/components/MemoModal';
 import { SettingsModal } from './src/components/SettingsModal';
 import { TRANSLATIONS } from './src/i18n/translations';
 import {
+  clearStoredData,
   loadStoredData,
   saveStoredMemos,
   saveStoredSettings,
@@ -27,7 +28,8 @@ import { ApiError, authApi, type AuthUser } from './src/utils/api';
 import { getCalendarDays, SWIPE_THRESHOLD } from './src/utils/calendar';
 import { getCurrentMonth, getSelectedDateTitle } from './src/utils/date';
 import { createMemo } from './src/utils/memos';
-import { useSocialAuth, type SocialResult } from './src/utils/socialAuth';
+// Social login is intentionally disabled for the initial release.
+// import { useSocialAuth, type SocialResult } from './src/utils/socialAuth';
 
 export default function App() {
   const { width } = useWindowDimensions();
@@ -44,7 +46,8 @@ export default function App() {
   const [needsVerification, setNeedsVerification] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const social = useSocialAuth();
+  // Social login is intentionally disabled for the initial release.
+  // const social = useSocialAuth();
 
   const text = TRANSLATIONS[settings.language];
   const colors = THEMES[settings.theme];
@@ -231,41 +234,42 @@ export default function App() {
     }
   };
 
-  const socialLogin = async (
-    provider: 'google' | 'apple' | 'kakao',
-  ): Promise<string | null> => {
-    try {
-      let result: SocialResult | null = null;
-
-      if (provider === 'google') {
-        result = await social.signInWithGoogle();
-      } else if (provider === 'apple') {
-        result = await social.signInWithApple();
-      } else {
-        result = await social.signInWithKakao();
-      }
-
-      if (!result) {
-        return null; // user cancelled
-      }
-
-      if (result.kind === 'token') {
-        const user = await authApi.loginWithToken(result.jwt);
-        setAuthUser(user);
-        setNeedsVerification(!user.emailVerified);
-        return null;
-      }
-
-      const auth = await authApi.socialLogin(result.provider, result.token, {
-        email: result.email,
-      });
-      setAuthUser(auth.user);
-      setNeedsVerification(auth.needsVerification);
-      return null;
-    } catch (error) {
-      return toErrorMessage(error);
-    }
-  };
+  // Social login is intentionally disabled for the initial release.
+  // const socialLogin = async (
+  //   provider: 'google' | 'apple' | 'kakao',
+  // ): Promise<string | null> => {
+  //   try {
+  //     let result: SocialResult | null = null;
+  //
+  //     if (provider === 'google') {
+  //       result = await social.signInWithGoogle();
+  //     } else if (provider === 'apple') {
+  //       result = await social.signInWithApple();
+  //     } else {
+  //       result = await social.signInWithKakao();
+  //     }
+  //
+  //     if (!result) {
+  //       return null; // user cancelled
+  //     }
+  //
+  //     if (result.kind === 'token') {
+  //       const user = await authApi.loginWithToken(result.jwt);
+  //       setAuthUser(user);
+  //       setNeedsVerification(!user.emailVerified);
+  //       return null;
+  //     }
+  //
+  //     const auth = await authApi.socialLogin(result.provider, result.token, {
+  //       email: result.email,
+  //     });
+  //     setAuthUser(auth.user);
+  //     setNeedsVerification(auth.needsVerification);
+  //     return null;
+  //   } catch (error) {
+  //     return toErrorMessage(error);
+  //   }
+  // };
 
   const signOut = async () => {
     try {
@@ -279,6 +283,29 @@ export default function App() {
   const deleteAccount = async () => {
     try {
       await authApi.deleteAccount();
+      setAuthUser(null);
+      setNeedsVerification(false);
+      setIsSettingsOpen(false);
+      setErrorMessage(null);
+    } catch (error) {
+      setErrorMessage(toErrorMessage(error));
+    }
+  };
+
+  const deleteAllData = async () => {
+    try {
+      if (authUser) {
+        await authApi.deleteAccount();
+      } else {
+        await authApi.logout();
+      }
+
+      await clearStoredData();
+      setMemos({});
+      setSettings(DEFAULT_SETTINGS);
+      setSelectedDateKey(null);
+      setEditingMemoId(null);
+      setDraftMemo('');
       setAuthUser(null);
       setNeedsVerification(false);
       setIsSettingsOpen(false);
@@ -419,6 +446,7 @@ export default function App() {
         iconColor={colors.text}
         needsVerification={needsVerification}
         onClose={() => setIsSettingsOpen(false)}
+        onDeleteAllData={() => void deleteAllData()}
         onDeleteAccount={() => void deleteAccount()}
         onOpenAuth={() => setIsAuthOpen(true)}
         onSignOut={() => void signOut()}
@@ -430,9 +458,7 @@ export default function App() {
       />
 
       <AuthModal
-        appleReady={social.appleReady}
         authUser={authUser}
-        googleReady={social.googleReady}
         iconColor={colors.text}
         needsVerification={needsVerification}
         onClose={() => setIsAuthOpen(false)}
@@ -440,7 +466,10 @@ export default function App() {
         onSignIn={signIn}
         onSignOut={() => void signOut()}
         onSignUp={signUp}
-        onSocialLogin={socialLogin}
+        /*
+         * Social login is intentionally disabled for the initial release.
+         * onSocialLogin={socialLogin}
+         */
         onVerifyEmail={verifyEmail}
         placeholderColor={colors.subtleText}
         styles={styles}

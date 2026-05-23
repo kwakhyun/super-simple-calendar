@@ -175,23 +175,24 @@ export const authApi = {
     }
   },
 
-  async socialLogin(
-    provider: Exclude<AuthProvider, 'email'>,
-    token: string,
-    extra: { email?: string; redirectUri?: string } = {},
-  ): Promise<AuthResult> {
-    const data = await request<AuthResponse>('/auth/social', {
-      method: 'POST',
-      body: JSON.stringify({ provider, token, ...extra }),
-    });
-    const user = await persistAuth(data);
-    return { user, needsVerification: false };
-  },
+  // Social login is intentionally disabled for the initial release.
+  // async socialLogin(
+  //   provider: Exclude<AuthProvider, 'email'>,
+  //   token: string,
+  //   extra: { email?: string; redirectUri?: string } = {},
+  // ): Promise<AuthResult> {
+  //   const data = await request<AuthResponse>('/auth/social', {
+  //     method: 'POST',
+  //     body: JSON.stringify({ provider, token, ...extra }),
+  //   });
+  //   const user = await persistAuth(data);
+  //   return { user, needsVerification: false };
+  // },
 
-  async loginWithToken(token: string): Promise<AuthUser> {
-    await setToken(token);
-    return this.me();
-  },
+  // async loginWithToken(token: string): Promise<AuthUser> {
+  //   await setToken(token);
+  //   return this.me();
+  // },
 
   async verifyEmail(code: string): Promise<void> {
     await request<{ success: boolean }>(
