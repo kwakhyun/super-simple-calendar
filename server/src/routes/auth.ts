@@ -43,7 +43,7 @@ function publicUser(row: Pick<UserRow, "id" | "email" | "auth_provider" | "email
 }
 
 // POST /auth/register --------------------------------------------------------
-router.post("/register", (req: Request, res: Response) => {
+router.post("/register", async (req: Request, res: Response) => {
   const parsed = registerSchema.safeParse(req.body);
   if (!parsed.success) {
     sendError(res, 400, ERROR_CODES.VALIDATION, parsed.error.issues[0].message);
@@ -67,7 +67,18 @@ router.post("/register", (req: Request, res: Response) => {
   ).run(id, email, passwordHash);
 
   const code = createVerificationCode(id);
-  void sendVerificationEmail(email, code).catch(console.error);
+  try {
+    await sendVerificationEmail(email, code);
+  } catch (error) {
+    console.error("[email] Failed to send verification email:", error);
+    sendError(
+      res,
+      502,
+      ERROR_CODES.INTERNAL,
+      "인증 메일을 발송하지 못했습니다. 잠시 후 다시 시도해주세요.",
+    );
+    return;
+  }
 
   const token = generateToken({ userId: id, email });
   res.status(201).json({
@@ -82,7 +93,7 @@ router.post("/register", (req: Request, res: Response) => {
 });
 
 // POST /auth/login -----------------------------------------------------------
-router.post("/login", (req: Request, res: Response) => {
+router.post("/login", async (req: Request, res: Response) => {
   const parsed = loginSchema.safeParse(req.body);
   if (!parsed.success) {
     sendError(res, 400, ERROR_CODES.VALIDATION, parsed.error.issues[0].message);
@@ -110,7 +121,18 @@ router.post("/login", (req: Request, res: Response) => {
 
   if (user.email_verified !== 1) {
     const code = createVerificationCode(user.id);
-    void sendVerificationEmail(user.email, code).catch(console.error);
+    try {
+      await sendVerificationEmail(user.email, code);
+    } catch (error) {
+      console.error("[email] Failed to send verification email:", error);
+      sendError(
+        res,
+        502,
+        ERROR_CODES.INTERNAL,
+        "인증 메일을 발송하지 못했습니다. 잠시 후 다시 시도해주세요.",
+      );
+      return;
+    }
     sendError(res, 403, ERROR_CODES.EMAIL_NOT_VERIFIED, "이메일 인증이 필요합니다.", {
       token,
       user: publicUser(user),
@@ -142,7 +164,7 @@ router.post("/verify-email", authMiddleware, (req: Request, res: Response) => {
 router.post(
   "/resend-verification",
   authMiddleware,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const user = db
       .prepare("SELECT id, email, email_verified FROM users WHERE id = ?")
       .get(req.user!.userId) as
@@ -159,7 +181,18 @@ router.post(
     }
 
     const code = createVerificationCode(user.id);
-    void sendVerificationEmail(user.email, code).catch(console.error);
+    try {
+      await sendVerificationEmail(user.email, code);
+    } catch (error) {
+      console.error("[email] Failed to send verification email:", error);
+      sendError(
+        res,
+        502,
+        ERROR_CODES.INTERNAL,
+        "인증 메일을 발송하지 못했습니다. 잠시 후 다시 시도해주세요.",
+      );
+      return;
+    }
     res.json({ success: true });
   },
 );

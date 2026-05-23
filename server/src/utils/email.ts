@@ -110,10 +110,16 @@ export async function sendVerificationEmail(
     return;
   }
 
-  await resend.emails.send({
+  const result = await resend.emails.send({
     from: FROM_ADDRESS,
     to: email,
     subject: "Simple Calendar 이메일 인증 코드",
     html: buildCodeEmailHtml(code),
   });
+
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+
+  console.log(`[email] Verification email sent to ${email}: ${result.data?.id}`);
 }
